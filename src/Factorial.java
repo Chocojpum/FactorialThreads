@@ -31,6 +31,7 @@ public class Factorial {
 			System.out.println("El factorial recursivo de " + num + " es: " + valorBig);
 			System.out.println("Tiempo de ejecución método recursivo: " + (t2-t1) + " milisegundos.\n");
         }catch(StackOverflowError e){
+			//La JVM aloca una cantidad de memoria que puede sobrepasarse al hacer muchos llamados recursivos, por lo que se indica por pantalla cuando ocurra el límite
             System.err.println("\nLa recursión se llama demasiadas veces, no es posible calcular el valor del factorial recursivamente debido a que sobrepasa la memoria alocada por la máquina virtual de java.\n");
 		}
 		/*
