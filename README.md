@@ -1,5 +1,5 @@
 # FactorialThreads
-Calcular un factorial grande y comparar tiempos entre las soluciones iterativa, recursiva y con concurrencia.
+## Calcular un factorial grande y comparar tiempos entre las soluciones iterativa, recursiva y con concurrencia.
 
 Para el método con concurrencia (utilización de threads) se implementan 2 hilos y dividen el cálculo del factorial en 2.
 
@@ -7,7 +7,7 @@ Se solicitará el número a calcular su factorial por teclado y para el testeo s
 
 En caso de utilizar un valor muy grande (por ejemplo 1.000.000) se recomienda comentar las líneas de código que imprimen el valor para visualizar mejor la comparación de tiempos.
 
-Los specs del ordenador utilizado en el testeo son: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz, 1999 Mhz, 4 Cores, 8 Logical Processors.
+> Los specs del ordenador utilizado en el testeo son: Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz, 1999 Mhz, 4 Cores, 8 Logical Processors.
 
 Los resultados para el valor 1.000.000 son:
 
@@ -33,4 +33,4 @@ R: No es posible calcular el factorial de 1.000.000 con el método recursivo deb
 Con valores pequeños es más eficiente el método recursivo.
 
 
-Autor: José Pedro Unda Montecinos 
+**Autor: José Pedro Unda Montecinos** 
