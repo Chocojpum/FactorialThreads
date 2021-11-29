@@ -87,7 +87,7 @@ public class Factorial {
 			Thread t = new Thread(r);
 			t.start();
 			//el segundo thread se encarga de calcular la mitad de abajo del factorial, variando la mitad si es par o impar
-			if(num%2!=0) partSol = factIterativoBig((num-1)/2);
+			if(par) partSol = factIterativoBig((num-1)/2);
 			else partSol = factIterativoBig((num/2)-1);		
 			t.join();
 			//cuando los dos threads estén listos se retornará la multiplicación entre sus dos resultados, siendo el valor final del factorial
