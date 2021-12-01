@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Factorial {
 	public static void main(String[] args) {
 		int num;
-		long t1,t2;
+		long t1,t2,tiempoIterativo,tiempoRecursivo,tiempoThread;
 		BigInteger valorBig=BigInteger.ZERO;
 		Scanner sc = new Scanner(System.in);
 		
@@ -19,20 +19,22 @@ public class Factorial {
         t1 = System.currentTimeMillis();
 		valorBig=factIterativoBig(num);
 		t2 = System.currentTimeMillis();
+		tiempoIterativo=t2-t1;
 		System.out.println("\nEl factorial iterativo de " + num + " es: " + valorBig); 
-		System.out.println("Tiempo de ejecución método iterativo: " + (t2-t1) + " milisegundos.\n");
-        /*
+		 /*
 		**Medición del método recursivo
 		*/
 		t1 = System.currentTimeMillis();
         try{
             valorBig=factRecursivoBig(BigInteger.valueOf(num));
 			t2 = System.currentTimeMillis();
+			tiempoRecursivo=t2-t1;
 			System.out.println("El factorial recursivo de " + num + " es: " + valorBig);
-			System.out.println("Tiempo de ejecución método recursivo: " + (t2-t1) + " milisegundos.\n");
+			
         }catch(StackOverflowError e){
 			//La JVM aloca una cantidad de memoria que puede sobrepasarse al hacer muchos llamados recursivos, por lo que se indica por pantalla cuando ocurra el límite
-            System.err.println("\nLa recursión se llama demasiadas veces, no es posible calcular el valor del factorial recursivamente debido a que sobrepasa la memoria alocada por la máquina virtual de java.\n");
+            tiempoRecursivo=-1;
+			System.err.println("\nLa recursión se llama demasiadas veces, no es posible calcular el valor del factorial recursivamente debido a que sobrepasa la memoria alocada por la máquina virtual de java.\n");
 		}
 		/*
 		**Medición del método concurrencia
@@ -40,8 +42,16 @@ public class Factorial {
 		t1 = System.currentTimeMillis();
 		valorBig=factThreads(num);
 		t2 = System.currentTimeMillis();
+		tiempoThread=t2-t1;
 		System.out.println("\nEl factorial con concurrencia de " + num + " es: " + valorBig); 
-		System.out.println("Tiempo de ejecución método concurrencia: " + (t2-t1) + " milisegundos.\n");
+		
+		System.out.println("\nTiempo de ejecución método iterativo: " + tiempoIterativo + " milisegundos.\n");
+		if(tiempoRecursivo==-1){
+			System.out.println("\nEl método recursivo no se ejecutó para el valor entregado debido a que supera el espacio de memoria del stack del jvm.\n");
+		}else{
+			System.out.println("\nTiempo de ejecución método recursivo: " + tiempoRecursivo + " milisegundos.\n");
+		}
+		System.out.println("\nTiempo de ejecución método concurrencia: " + tiempoThread + " milisegundos.\n");
         
 		sc.close();
 	}
@@ -83,13 +93,11 @@ public class Factorial {
 			//booleano que dice si el número es par o impar
 			boolean par = num%2!=0;
 			//se hace el llamado al thread que se encargará de calcular la mitad superior del factorial
-			FactorialThread r = new FactorialThread(num,par);
-			Thread t = new Thread(r);
-			t.start();
-			//el segundo thread se encarga de calcular la mitad de abajo del factorial, variando la mitad si es par o impar
+			FactorialThread r = new FactorialThread(num,par); 
+			//el thread principal (main) se encarga de calcular la mitad de abajo del factorial, variando la mitad si es par o impar
 			if(par) partSol = factIterativoBig((num-1)/2);
 			else partSol = factIterativoBig((num/2)-1);		
-			t.join();
+			r.t.join();
 			//cuando los dos threads estén listos se retornará la multiplicación entre sus dos resultados, siendo el valor final del factorial
 			return r.res.multiply(partSol);
 		}catch(InterruptedException e){
@@ -105,9 +113,12 @@ class FactorialThread implements Runnable{
 	int num,limit;
 	boolean par;
 	BigInteger res;
+	Thread t;
 	FactorialThread(int num,boolean par){
 		this.num=num;
 		this.par=par;
+		t=new Thread(this);
+		t.start();
 	}
 	public void run() {
 		res = BigInteger.ONE;
